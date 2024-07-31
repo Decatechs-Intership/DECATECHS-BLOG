@@ -499,12 +499,12 @@ h1 {
 
 .service-table .action a {
     margin: 10px 0;
+    display: block;
+    width: 100%;
 }
 
 .service-table .action {
     width: 200px;
-    display: flex;
-    flex-direction: column;
 }
 
 .post .title span {
@@ -524,4 +524,8 @@ h1 {
 
 .admin .cur_user {
     font-weight: bold;
+}
+
+.bi {
+    margin-right: 5px;
 }

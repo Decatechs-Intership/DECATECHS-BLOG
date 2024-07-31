@@ -24,9 +24,9 @@
                     <td class="align-middle description">{{ service.description }}</td>
                     <td class="align-middle action">
                         {% if app.user and 'ROLE_ADMIN' in app.user.roles %}
-                            <a href="{{ path('service.edit', { id: service.id }) }}" class="btn btn-primary">Modifier</a>
+                            <a href="{{ path('service.edit', { id: service.id }) }}" class="btn btn-primary"><i class="bi bi-pencil"></i>Modifier</a>
                         {% endif %}
-                        <a href="{{ path('forum.show', { service_id: service.id, userPost: 'false' }) }}" class="btn btn-primary">Voir le forum <p style="margin: 0">({{ postsCount[service.id] }} posts)</p></a>
+                        <a href="{{ path('forum.show', { service_id: service.id, userPost: 'false' }) }}" class="btn btn-primary"><i class="bi bi-eye"></i>Voir le forum <p style="margin: 0">({{ postsCount[service.id] }} posts)</p></a>
                     </td>
                 </tr>
             {% endfor %}
