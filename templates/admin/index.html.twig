@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Administration{% endblock %}
+
+{% block body %}
+    <section class="admin">
+        <div class="menu container-fluid">
+            <p class="title">Menu</p>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <a href="{{ path('admin.users') }}">Voir tous les utilisateurs</a>
+                </li>
+            </ul>
+            <p class="add-post">
+                <a href="{{ path('post.create') }}"><i class="bi bi-plus-circle"></i>Ajouter un post</a>
+            </p>
+        </div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col" class="order">N°</th>
+                <th scope="col">Username</th>
+                <th scope="col">Email</th>
+                <th scope="col" style="width: 20%">Roles</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% set current_user = app.user %}
+            {% set users_sorted = users|filter(user => user.id != current_user.id) %}
+            {% set users_sorted = [current_user]|merge(users_sorted) %}
+
+            {% for user in users_sorted %}
+                <tr class="{{ current_user == user ? 'cur_user' : '' }}">
+                    <th scope="row" class="align-middle">{{ loop.index }}</th>
+                    <td class="align-middle">{{ user.username }}</td>
+                    <td class="align-middle">{{ user.email }}</td>
+                    <td class="align-middle">
+                        {% set user_roles = user.roles %}
+                        {% if user_roles|length > 1 %}
+                            {% for role in user_roles %}
+                                {% if role != 'ROLE_USER' %}
+                                    ADMIN
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            USER
+                        {% endif %}
+                    </td>
+                    <td class="align-middle">
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-{{ user.id }}">
+                            Modifier le rôle
+                        </button>
+                    </td>
+                </tr>
+
+                <!-- Modal -->
+                <div class="modal fade" id="modal-{{ user.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Modification du rôle</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Sélectionnez le rôle à attribuer :
+                            </div>
+                            <div class="modal-footer w-100 d-flex justify-content-center">
+                                <form action="{{ path('update_role', { id: user.id, role: 'ROLE_USER' }) }}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-primary mx-2">USER</button>
+                                </form>
+                                <form action="{{ path('update_role', { id: user.id, role: 'ROLE_ADMIN' }) }}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-primary mx-2">ADMIN</button>
+                                </form>
+                                <form action="{{ path('update_role', { id: user.id, role: 'ROLE_SUPER_ADMIN' }) }}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-primary mx-2">SUPER ADMIN</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </section>
+{% endblock %}
